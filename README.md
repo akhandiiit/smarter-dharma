@@ -1,73 +1,100 @@
-# React + TypeScript + Vite
+# Building Energy Analysis System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application to analyze solar heat gain in buildings and estimate cooling costs for Indian cities.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Configure building facades (North, South, East, West, Roof) with dimensions and window-to-wall ratios (WWR). The system calculates solar heat gain using city-specific solar radiation data and estimates total cooling costs.
 
-## React Compiler
+**Key Features:**
+- Building configuration with height, width, WWR for all facades
+- City selection (Delhi, Mumbai, Kolkata, Bangalore)
+- SHGC (Solar Heat Gain Coefficient) input
+- Energy calculation: `Q = A × SHGC × G × Δt`
+- Cost estimation with city-specific electricity rates
+- Visual dashboard with bar chart showing cost breakdown
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+**Frontend:** React 18, TypeScript, Material UI v5, Recharts, React Query, Vite  
+**Backend:** Node.js, Express, TypeScript
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```
+frontend/src/
+├── api/building.api.ts
+├── components/
+│   ├── BuildingForm.tsx
+│   ├── Dashboard.tsx
+│   └── Charts.tsx
+├── types/building.ts
+└── App.tsx
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+backend/src/
+├── constants/cityData.ts
+├── services/calculation.service.ts
+├── controllers/building.controller.ts
+├── routes/building.routes.ts
+└── server.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## API Endpoint
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+**POST** `/api/building/analyze`
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```json
+{
+  "city": "Mumbai",
+  "shgc": 0.6,
+  "facades": {
+    "north": { "height": 10, "width": 20, "wwr": 0.4 },
+    "south": { "height": 10, "width": 20, "wwr": 0.5 },
+    "east":  { "height": 10, "width": 15, "wwr": 0.3 },
+    "west":  { "height": 10, "width": 15, "wwr": 0.3 },
+    "roof":  { "height": 12, "width": 25, "wwr": 0.2 }
+  }
+}
 ```
+
+**Response:**
+```json
+{
+  "city": "Mumbai",
+  "shgc": 0.6,
+  "totalCost": 1234.56,
+  "breakdown": {
+    "north": { "windowArea": 80, "btu": 86400, "energy": 6.32, "cost": 56.9 }
+  }
+}
+```
+
+## Running Locally
+
+**Backend:**
+```bash
+cd backend
+npm install
+npm run dev  # Runs on http://localhost:5000
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev  # Runs on http://localhost:5173
+```
+
+## Design Decisions
+
+- **Stateless API**: No database, focused on calculation accuracy
+- **React Query**: Clean server state management
+- **TypeScript**: Type safety across frontend and backend
+- **Card-based UI**: Modern dashboard experience
+
+## Future Enhancements
+
+- Save and compare multiple designs
+- PDF export functionality
+- Multi-city comparison view
+- User authentication
