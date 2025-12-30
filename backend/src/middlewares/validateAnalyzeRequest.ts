@@ -70,5 +70,5 @@ export function validateAnalyzeRequest(
     }
   }
 
-  next(); // ✅ all validations passed
+  next(); 
 }
