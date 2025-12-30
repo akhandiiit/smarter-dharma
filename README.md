@@ -35,6 +35,7 @@ backend/src/
 ├── constants/cityData.ts
 ├── services/calculation.service.ts
 ├── controllers/building.controller.ts
+├── middlewares/validateAnalyzeRequest.ts
 ├── routes/building.routes.ts
 └── server.ts
 ```
@@ -87,7 +88,7 @@ npm run dev  # Runs on http://localhost:5173
 
 ## Design Decisions
 
-- **Stateless API**: No database, focused on calculation accuracy
+- **Stateless API**: No database, focused on calculation accuracy, proper request data validation.
 - **React Query**: Clean server state management
 - **TypeScript**: Type safety across frontend and backend
 - **Card-based UI**: Modern dashboard experience
