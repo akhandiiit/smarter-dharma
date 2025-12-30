@@ -12,7 +12,6 @@ import {
 import { useState } from "react";
 import { AnalyzeRequest, FacadeKey } from "../types/building";
 
-/* -------------------- Constants -------------------- */
 
 const FACADES: FacadeKey[] = ["north", "south", "east", "west", "roof"];
 
@@ -21,7 +20,6 @@ const defaultFacades = FACADES.reduce((acc, f) => {
   return acc;
 }, {} as AnalyzeRequest["facades"]);
 
-/* -------------------- Error Types -------------------- */
 
 type FacadeErrors = {
   height?: string;
@@ -35,16 +33,13 @@ type FormErrors = {
   facades: Record<FacadeKey, FacadeErrors>;
 };
 
-/* -------------------- Helpers -------------------- */
 
-// 🔥 IMPORTANT: always create fresh error objects
 const createEmptyFacadeErrors = (): Record<FacadeKey, FacadeErrors> =>
   FACADES.reduce((acc, f) => {
     acc[f] = {};
     return acc;
   }, {} as Record<FacadeKey, FacadeErrors>);
 
-/* -------------------- Component -------------------- */
 
 export default function BuildingForm({
   onSubmit,
@@ -63,7 +58,6 @@ export default function BuildingForm({
     facades: createEmptyFacadeErrors(),
   });
 
-  /* -------------------- Handlers -------------------- */
 
   const handleFacadeChange = (
     facade: FacadeKey,
@@ -94,7 +88,6 @@ export default function BuildingForm({
     }));
   };
 
-  /* -------------------- Validation -------------------- */
 
   const validateForm = (): boolean => {
     let valid = true;
@@ -142,7 +135,6 @@ export default function BuildingForm({
     return valid;
   };
 
-  /* -------------------- Render -------------------- */
 
   return (
     <Card elevation={3} sx={{ borderRadius: 3 }}>
