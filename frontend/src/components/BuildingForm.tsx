@@ -82,7 +82,6 @@ export default function BuildingForm({
       },
     }));
 
-    // ✅ ALWAYS clear error on user input
     setErrors((prev) => ({
       ...prev,
       facades: {
